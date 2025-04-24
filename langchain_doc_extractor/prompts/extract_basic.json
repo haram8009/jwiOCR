@@ -1,0 +1,6 @@
+{
+    "name": "extract_basic",
+    "description": "기본적인 송장번호, 수출입자, 금액 정보 추출",
+    "template": "다음 텍스트에서 송장번호, 수출입자, 금액 정보를 JSON으로 추출하세요:\n\n{text}"
+  }
+  

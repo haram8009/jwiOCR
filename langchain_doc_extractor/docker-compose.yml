@@ -1,0 +1,23 @@
+version: "3.9"
+
+services:
+  fastapi_server:
+    build: .
+    container_name: langchain_fastapi
+    ports:
+      - "8000:8000"
+    volumes:
+      - .:/app
+    env_file:
+      - .env
+    restart: unless-stopped
+
+  # ocr_service:
+  #   image: tesseractshadow/tesseract4re
+  #   container_name: ocr_service
+  #   networks:
+  #     - extractor_network
+
+networks:
+  extractor_network:
+    driver: bridge

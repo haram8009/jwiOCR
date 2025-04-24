@@ -1,0 +1,38 @@
+# Python 관련
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.sqlite3
+*.log
+*.env
+.env.*
+!.env.example
+
+# Virtual environments
+.venv/
+venv/
+ENV/
+env/
+
+# VSCode or other IDEs
+.vscode/
+.idea/
+*.swp
+
+# Output, temp
+output/
+*.pdf
+*.png
+*.jpg
+*.jpeg
+*.tiff
+*.zip
+
+# PyInstaller
+*.spec
+dist/
+build/
+
+# Local dev
+.DS_Store

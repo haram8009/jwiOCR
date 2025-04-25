@@ -9,7 +9,7 @@ class JSONHandler(BaseOutputHandler):
             json.dump(result, f, indent=2, ensure_ascii=False)
 
     def parse(self, raw_result: str) -> dict:
-        print(f"Raw result: {raw_result}", type(raw_result) )
+        # print(f"Raw result: {raw_result}", type(raw_result) )
         try:
             return json.loads(raw_result) if isinstance(raw_result, str) else raw_result
         except json.JSONDecodeError as e:

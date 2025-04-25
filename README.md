@@ -60,7 +60,7 @@ source venv/bin/activate  # Windows: venv\\Scripts\\activate
 pip install -r requirements.txt
 
 # 테스트용 실행
-PYTHONPATH=. python app/main.py
+PYTHONPATH=. python -m uvicorn app.server:app --reload
 ```
 
 ### 3️⃣ 실행 결과 확인

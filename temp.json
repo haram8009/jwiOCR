@@ -1,0 +1,171 @@
+{
+    "HouseBL_No": "207825915",
+    "BL_NO": "207825915",
+    "Containers": [
+      {
+        "Container_No": "MSKU9879010",
+        "Seal_No": "ML-KR5389866",
+        "Package_Quantity": 50,
+        "Package_Weight": 5117.776,
+        "Package_Unit": "KGS",
+        "Package_Volume": 49.904,
+        "Package_Type": "CT"
+      },
+      {
+        "Container_No": "HASU4844330",
+        "Seal_No": "ML-KR5020631",
+        "Package_Quantity": 48,
+        "Package_Weight": 4732.3,
+        "Package_Unit": "KGS",
+        "Package_Volume": 46.04,
+        "Package_Type": "CT"
+      },
+      {
+        "Container_No": "MRKU4110421",
+        "Seal_No": "ML-KR5392477",
+        "Package_Quantity": 386,
+        "Package_Weight": 5167.6,
+        "Package_Unit": "KGS",
+        "Package_Volume": 46.88,
+        "Package_Type": "CT"
+      },
+      {
+        "Container_No": "CAAU5417378",
+        "Seal_No": "ML-KR5075999",
+        "Package_Quantity": 50,
+        "Package_Weight": 4753.6,
+        "Package_Unit": "KGS",
+        "Package_Volume": 46.16,
+        "Package_Type": "CT"
+      },
+      {
+        "Container_No": "MSKU0263126",
+        "Seal_No": "ML-KR5032352",
+        "Package_Quantity": 48,
+        "Package_Weight": 4888.28,
+        "Package_Unit": "KGS",
+        "Package_Volume": 49.56,
+        "Package_Type": "CT"
+      },
+      {
+        "Container_No": "MRKU5359430",
+        "Seal_No": "ML-KR4854403",
+        "Package_Quantity": 224,
+        "Package_Weight": 4866.28,
+        "Package_Unit": "KGS",
+        "Package_Volume": 45.908,
+        "Package_Type": "CT"
+      },
+      {
+        "Container_No": "TCLU5426065",
+        "Seal_No": "ML-KR4854415",
+        "Package_Quantity": 37,
+        "Package_Weight": 4782.064,
+        "Package_Unit": "KGS",
+        "Package_Volume": 47.096,
+        "Package_Type": "CT"
+      },
+      {
+        "Container_No": "MRKU2125145",
+        "Seal_No": "ML-KR5392472",
+        "Package_Quantity": 26,
+        "Package_Weight": 4498,
+        "Package_Unit": "KGS",
+        "Package_Volume": 44.72,
+        "Package_Type": "CT"
+      },
+      {
+        "Container_No": "MRKU5902845",
+        "Seal_No": "ML-KR5386737",
+        "Package_Quantity": 50,
+        "Package_Weight": 4753.6,
+        "Package_Unit": "KGS",
+        "Package_Volume": 46.16,
+        "Package_Type": "CT"
+      },
+      {
+        "Container_No": "HASU5120392",
+        "Seal_No": "ML-KR4854418",
+        "Package_Quantity": 50,
+        "Package_Weight": 5117.776,
+        "Package_Unit": "KGS",
+        "Package_Volume": 49.904,
+        "Package_Type": "CT"
+      },
+      {
+        "Container_No": "CNIU2459195",
+        "Seal_No": "ML-KR5386629",
+        "Package_Quantity": 26,
+        "Package_Weight": 3745,
+        "Package_Unit": "KGS",
+        "Package_Volume": 43.662,
+        "Package_Type": "CT"
+      },
+      {
+        "Container_No": "CAAU5302065",
+        "Seal_No": "ML-KR4855947",
+        "Package_Quantity": 26,
+        "Package_Weight": 4498,
+        "Package_Unit": "KGS",
+        "Package_Volume": 44.72,
+        "Package_Type": "CT"
+      },
+      {
+        "Container_No": "HASU4221963",
+        "Seal_No": "ML-KR5020473",
+        "Package_Quantity": 26,
+        "Package_Weight": 4498,
+        "Package_Unit": "KGS",
+        "Package_Volume": 44.72,
+        "Package_Type": "CT"
+      },
+      {
+        "Container_No": "MSKU0307461",
+        "Seal_No": "ML-KR4854421",
+        "Package_Quantity": 26,
+        "Package_Weight": 4498,
+        "Package_Unit": "KGS",
+        "Package_Volume": 44.72,
+        "Package_Type": "CT"
+      },
+      {
+        "Container_No": "MRKU5768973",
+        "Seal_No": "ML-KR5392440",
+        "Package_Quantity": 194,
+        "Package_Weight": 4814.896,
+        "Package_Unit": "KGS",
+        "Package_Volume": 45.632,
+        "Package_Type": "CT"
+      },
+      {
+        "Container_No": "SUDU5891896",
+        "Seal_No": "ML-KR4858471",
+        "Package_Quantity": 80,
+        "Package_Weight": 4409.4,
+        "Package_Unit": "KGS",
+        "Package_Volume": 47.748,
+        "Package_Type": "CT"
+      },
+      {
+        "Container_No": "TCLU5146871",
+        "Seal_No": "ML-KR5386545",
+        "Package_Quantity": 80,
+        "Package_Weight": 4266.4,
+        "Package_Unit": "KGS",
+        "Package_Volume": 47.748,
+        "Package_Type": "CT"
+      }
+    ],
+    "POL": "SOUTH KOREA, BUSAN PORT",
+    "POL_ETD": null,
+    "POD": "VANCOUVER, CANADA",
+    "POD_ETA": null,
+    "Final_Delivery_LOC": "ROMEOVILLE, IL, U.S.A",
+    "Vessel_Name": "NORTHERN JASPER",
+    "Voyage_No": "016N",
+    "Shipper": "TAEWOONG LOGISTICS CO.,LTD. O/B OF SAMSUNG ELECTRONICS CO., LTD 129, SAMSUNG-RO, YEONGTONG-GU SUWON 16677 GYEONGGI-DO SOUTH KOREA",
+    "Consignee": "JAMES WORLDWIDE, INC. 2301 RAYMER AVE. FULLERTON, CA 92833 U.S.A",
+    "Notify_Party": "SAME AS CONSIGNEE",
+    "Commodity": "REFRIGERATOR, VACUUM CLEANER, WATER FILTER, REF Filter, Kitchen, STACKING KIT, NO WOODEN PACKING MATERIAL",
+    "Move_Type": "CY/SD"
+  }

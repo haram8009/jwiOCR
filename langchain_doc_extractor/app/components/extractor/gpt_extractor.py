@@ -1,6 +1,6 @@
 import os
 from langchain_openai import ChatOpenAI
-from dotevt import load_dotenv
+from dotenv import load_dotenv
 from app.prompts import prompts
 from app.components.extractor.base_extractor import BaseExtractor
 from app.utils.logger import log_all_methods

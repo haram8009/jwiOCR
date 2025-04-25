@@ -1,4 +1,6 @@
 import os
+import asyncio
+import time
 from langchain_openai import ChatOpenAI
 from dotenv import load_dotenv
 from app.prompts import prompts
@@ -18,24 +20,26 @@ class GPTExtractor(BaseExtractor):
             openai_api_key=self.api_key
         )
         self.chain = prompts[prompt_name] | self.llm
-        # for parallel processing, use Runnable Parallel
-        # self.chain = RunnableParallel({
-        #     "basic": prompts["extract_basic"] | self.llm,
-        #     "detailed": prompts["extract_full_bl"] | self.llm,
-        #     "original_text": RunnablePassthrough()
-        # })
 
-    def extract(self, text: str, context: dict = {}) -> dict:
-        result = self.chain.invoke({"text": text})
-        logger.info(f"GPT Extractor Result: {result}")
-        # return self._parse_result(result.content)
-        return result.content
+    async def run_one(self, input : dict) -> dict:
+        """
+        - input: dict = {
+            "text": str, 
+            "filename": str        
+        }
+        - output: dict = {
+            "filename": str, 
+            "result": str
+        }
+        """
+        start = time.perf_counter()
+        res = await self.chain.ainvoke({"text": input["text"]})
+        duration = time.perf_counter() - start
+        logger.info(f"[GPT] {input['filename']} took {duration:.2f}s")
+        return {"filename": input["filename"], "result": res.content}
 
-    async def extract_batch(self, inputs: list[dict]) -> list[str]:
-        """
-        inputs: List of {"text": ..., "filename": ...}
-        returns: List of LLM response and filename dictionary {"text": ..., "filename": ...}
-        """
-        results = await self.chain.abatch(inputs)
-        # NOTE: abatch() returns a list of results in the same order as inputs
-        return [ {"filename": inp["filename"], "result": res.content} for inp, res in zip(inputs, results)]
+    async def extract(self, input :dict) -> dict:
+        return await self.run_one(input)
+        
+    async def extract_batch_parallel(self, inputs: list[dict]) -> list[dict]:
+        return await asyncio.gather(*[self.run_one(i) for i in inputs])

@@ -21,7 +21,7 @@ async def extract(
         }
         filedata = FileData(**filedata)  # Validate the file data 
 
-        result = service.extract_document(filedata, prompt_name)
+        result = await service.extract_document(filedata, prompt_name)
         return JSONResponse(content=result)
     except Exception as e:
         return JSONResponse(
@@ -45,6 +45,12 @@ async def extract_bulk(
                 contents=contents
             )
             filedata_list.append(filedata)
+
+        if not filedata_list:
+            return JSONResponse(
+                status_code=400,
+                content={"message": "No files provided."}
+            )
 
         results = await service.extract_document_bulk(filedata_list, prompt_name)
         return results

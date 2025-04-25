@@ -3,20 +3,21 @@ import fitz
 import pytesseract
 from PIL import Image
 import io
+import asyncio
 
 from app.schemas.file_data import FileData
 from app.utils.logger import log_all_methods
 
 @log_all_methods
 class PDFPreprocessor(BasePreprocessor):    
-    def extract_text(self, file_data: FileData) -> str:
-        return self.extract_text_from_bytes(file_data.contents)
+    def preprocess_text(self, file_data: FileData) -> str:
+        return self.preprocess_text_from_bytes(file_data.contents)
 
-    def extract_text_from_bytes(self, file_bytes: bytes, use_ocr: bool = False) -> str:
+    def preprocess_text_from_bytes(self, file_bytes: bytes, use_ocr: bool = False) -> str:
         with fitz.open(stream=file_bytes, filetype="pdf") as doc:
-            return self._extract_text_from_doc(doc, use_ocr)
+            return self._preprocess_text_from_doc(doc, use_ocr)
         
-    def _extract_text_from_doc(self, doc, use_ocr: bool) -> str:
+    def _preprocess_text_from_doc(self, doc, use_ocr: bool) -> str:
         full_text = ""
         for page in doc:
             text = page.get_text()
@@ -27,3 +28,10 @@ class PDFPreprocessor(BasePreprocessor):
                 img = Image.open(io.BytesIO(pix.tobytes("png")))
                 full_text += pytesseract.image_to_string(img)
         return full_text
+    
+    async def preprocess_text_batch_parallel(self, filedata_list: list[FileData]) -> list[str]:
+        texts = await asyncio.gather(*[
+            asyncio.to_thread(self.preprocess_text, filedata) 
+            for filedata in filedata_list
+        ])
+        return texts

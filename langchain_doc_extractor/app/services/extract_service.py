@@ -1,3 +1,4 @@
+import asyncio
 from app.components.preprocessor import PDFPreprocessor
 from app.components.extractor import GPTExtractor
 from app.components.output_handler import JSONHandler
@@ -11,36 +12,50 @@ class ExtractService:
         self.preprocessor = PDFPreprocessor()
         self.output_handler = JSONHandler()
 
-    def extract_document(self, filedata: FileData, prompt_name: str) -> dict:
+    async def extract_document(self, filedata: FileData, prompt_name: str) -> dict:
         if filedata.content_type == "application/pdf":
-            return self.extract_document_pdf(filedata, prompt_name)
+            return await self.extract_document_pdf(filedata, prompt_name)
         elif filedata.content_type in ("image/png", "image/jpeg"):
             return self.extract_document_img(filedata, prompt_name)
         else:
             raise ValueError(f"Unsupported content type: {filedata.content_type}")
 
-    def extract_document_pdf(self, filedata: FileData, prompt_name: str) -> dict:
+    async def extract_document_pdf(self, filedata: FileData, prompt_name: str) -> dict:
         # 텍스트 추출 + filename prefix 포함
-        text = self.preprocessor.extract_text(filedata)
+        text = self.preprocessor.preprocess_text(filedata)
         extractor = GPTExtractor(prompt_name=prompt_name)
-        result = extractor.extract(text)
-        return self.output_handler.parse(result)
+        result = await extractor.extract(({"text": text, "filename": filedata.filename}))
+        return self.output_handler.parse(result['result'])
 
     def extract_document_img(self, filedata: FileData, prompt_name: str) -> dict:
         raise NotImplementedError("Image support not implemented yet")
 
     async def extract_document_bulk(self, filedata_list: list[FileData], prompt_name: str) -> list[dict]:
+        pdf_files = [f for f in filedata_list if f.content_type == "application/pdf"]
+        img_files = [f for f in filedata_list if f.content_type in ("image/png", "image/jpeg")]
+
+        # PDF bulk extraction
+        if img_files:
+            raise NotImplementedError("Image bulk extraction is not supported yet.")
+            # return await self.extract_document_img_bulk(img_files, prompt_name)
+        if pdf_files:
+            return await self.extract_document_pdf_bulk(pdf_files, prompt_name)
+        if not pdf_files and not img_files:
+            raise ValueError("No supported files found in the input list.")
+
+
+    async def extract_document_pdf_bulk(self, filedata_list: list[FileData], prompt_name: str) -> list[dict]:
         extractor = GPTExtractor(prompt_name=prompt_name)
 
+        # asynchronous processing
+        texts = await self.preprocessor.preprocess_text_batch_parallel(filedata_list)
+
         inputs = [
-            {
-                "text": self.preprocessor.extract_text(filedata),
-                "filename": filedata.filename
-            }
-            for filedata in filedata_list
+            {"text": text, "filename": filedata.filename}
+            for text, filedata in zip(texts, filedata_list)
         ]
 
-        raw_results = await extractor.extract_batch(inputs)
+        raw_results = await extractor.extract_batch_parallel(inputs)
 
         return [
             {

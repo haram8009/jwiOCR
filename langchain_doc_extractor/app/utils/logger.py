@@ -1,40 +1,45 @@
 import logging
+import time
+import inspect
 from functools import wraps
-from inspect import isfunction
 
-# logger = logging.getLogger(__name__)
 logger = logging.getLogger("main")
 logging.basicConfig(level=logging.INFO)
 
 def log_call(fn=None):
     def decorator(func):
-        @wraps(func)
-        def wrapper(*args, **kwargs):
-            cls_name = args[0].__class__.__name__ if args else ""
-            logger.info(f"[{cls_name}] {func.__name__}() called")
-            return func(*args, **kwargs)
-        return wrapper
+        if inspect.iscoroutinefunction(func):
+            # async function
+            @wraps(func)
+            async def async_wrapper(*args, **kwargs):
+                cls_name = args[0].__class__.__name__ if args else ""
+                start = time.perf_counter()
+                result = await func(*args, **kwargs)
+                duration = time.perf_counter() - start
+                logger.info(f"[{cls_name}] {func.__name__}() called — took {duration:.2f}s")
+                return result
+            return async_wrapper
+        else:
+            # sync function
+            @wraps(func)
+            def sync_wrapper(*args, **kwargs):
+                cls_name = args[0].__class__.__name__ if args else ""
+                start = time.perf_counter()
+                result = func(*args, **kwargs)
+                duration = time.perf_counter() - start
+                logger.info(f"[{cls_name}] {func.__name__}() called — took {duration:.2f}s")
+                return result
+            return sync_wrapper
 
-    # 사용자가 @log_call()처럼 호출했을 경우
-    if fn is None:
-        return decorator
-
-    # 사용자가 @log_call 처럼 바로 데코레이터로 사용했을 경우
-    if isfunction(fn):
-        return decorator(fn)
-
-    raise TypeError("Invalid usage of log_call")
+    return decorator if fn is None else decorator(fn)
 
 
 def log_all_methods(cls=None):
     def decorator(inner_cls):
         for attr_name, attr in inner_cls.__dict__.items():
             if callable(attr) and not attr_name.startswith("__"):
-                setattr(inner_cls, attr_name, log_call(attr))
+                decorated = log_call(attr)
+                setattr(inner_cls, attr_name, decorated)
         return inner_cls
 
-    # 사용자가 @log_all_methods()처럼 호출했을 경우
-    if cls is None:
-        return decorator
-    # 사용자가 @log_all_methods처럼 바로 썼을 경우
-    return decorator(cls)
+    return decorator if cls is None else decorator(cls)

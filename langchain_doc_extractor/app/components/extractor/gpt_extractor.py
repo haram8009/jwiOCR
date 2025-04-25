@@ -1,5 +1,6 @@
+import os
 from langchain_openai import ChatOpenAI
-from langchain.schema.runnable import RunnableParallel, RunnablePassthrough
+from dotevt import load_dotenv
 from app.prompts import prompts
 from app.components.extractor.base_extractor import BaseExtractor
 from app.utils.logger import log_all_methods
@@ -8,11 +9,13 @@ logger = logging.getLogger(__name__)
 
 @log_all_methods
 class GPTExtractor(BaseExtractor):
-    def __init__(self, api_key: str, prompt_name: str = "extract_basic"):
+    def __init__(self, prompt_name: str = "extract_basic"):
+        load_dotenv()
+        self.api_key = os.getenv("OPENAI_API_KEY")
         self.llm = ChatOpenAI(
             temperature=0,
             model="gpt-4.1-mini",
-            openai_api_key=api_key
+            openai_api_key=self.api_key
         )
         self.chain = prompts[prompt_name] | self.llm
         # for parallel processing, use Runnable Parallel
@@ -27,7 +30,6 @@ class GPTExtractor(BaseExtractor):
         logger.info(f"GPT Extractor Result: {result}")
         # return self._parse_result(result.content)
         return result.content
-
 
     async def extract_batch(self, inputs: list[dict]) -> list[str]:
         """

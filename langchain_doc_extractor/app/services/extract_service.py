@@ -1,7 +1,3 @@
-import os
-from dotenv import load_dotenv
-from openai import OpenAI
-
 from app.components.preprocessor import PDFPreprocessor
 from app.components.extractor import GPTExtractor
 from app.components.output_handler import JSONHandler
@@ -12,8 +8,6 @@ from app.utils.logger import log_all_methods
 @log_all_methods
 class ExtractService:
     def __init__(self):
-        load_dotenv()
-        self.api_key = os.getenv("OPENAI_API_KEY")
         self.preprocessor = PDFPreprocessor()
         self.output_handler = JSONHandler()
 
@@ -28,7 +22,7 @@ class ExtractService:
     def extract_document_pdf(self, filedata: FileData, prompt_name: str) -> dict:
         # 텍스트 추출 + filename prefix 포함
         text = self.preprocessor.extract_text(filedata)
-        extractor = GPTExtractor(api_key=self.api_key, prompt_name=prompt_name)
+        extractor = GPTExtractor(prompt_name=prompt_name)
         result = extractor.extract(text)
         return self.output_handler.parse(result)
 
@@ -36,7 +30,7 @@ class ExtractService:
         raise NotImplementedError("Image support not implemented yet")
 
     async def extract_document_bulk(self, filedata_list: list[FileData], prompt_name: str) -> list[dict]:
-        extractor = GPTExtractor(api_key=self.api_key, prompt_name=prompt_name)
+        extractor = GPTExtractor(prompt_name=prompt_name)
 
         inputs = [
             {

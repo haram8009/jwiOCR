@@ -10,6 +10,7 @@ Please extract and return a **JSON object** with the following fields (use exact
 - BL_NO: Master BL Number (optional, may be missing in HBL)
 - Containers: list of Containers:
     - Container_No: Container Number
+    - Container_Type: Container Type (20GP, 40HQ, etc.)
     - Seal_No: Container Seal Number
     - Package_Quantity: Number of packages
     - Package_Weight: Total weight 

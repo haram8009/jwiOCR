@@ -1,4 +1,4 @@
-# langOCR
+# jwiOCR
 
 ## Document Extractor
 A modular OCR + GPT document extractor system using FastAPI and LangChain.
@@ -63,6 +63,4 @@ pip install -r requirements.txt
 PYTHONPATH=. python -m uvicorn app.server:app --reload
 ```
 
-### 3️⃣ 실행 결과 확인
-테스트용 실행 후 추출된 JSON 결과: `output/result.json`
 

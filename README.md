@@ -1,66 +1,117 @@
-# jwiOCR
+# 📄 jwiOCR — Intelligent Document Extraction with OCR + GPT
 
-## Document Extractor
-A modular OCR + GPT document extractor system using FastAPI and LangChain.
+**jwiOCR** is a modular, production-ready document extraction system that combines OCR and GPT via [LangChain](https://www.langchain.com/) and [FastAPI](https://fastapi.tiangolo.com/).  
+It is optimized for extracting structured data (e.g., shipping or invoice fields) from PDFs and images without fixed templates.
 
-## 📁 전체 파일 구조 (File Structure)
+---
+
+## ✨ Features
+
+- 🧠 **GPT-powered data extraction** using prompt templates
+- 🖼️ **OCR fallback** via Tesseract for scanned PDFs or image-based documents
+- 📄 Supports PDF and common image formats (JPEG, PNG)
+- ⚡ FastAPI REST API with OpenAPI docs (`/docs`)
+- 🧱 Modular architecture: easily extendable preprocessors, extractors, and output handlers
+- 🚀 Docker-ready for deployment and scaling
+- 📤 Outputs structured JSON per document
+
+---
+
+## 📂 Project Structure
 
 ```bash
-doc_extractor/
+jwiOCR/
 ├── docker-compose.yml
 ├── Dockerfile
+├── Jenkinsfile
 ├── requirements.txt
-├── .env
+├── .env                          # Environment variables
+├── .env.example
+├── .gitignore
+├── .dockerignore
+├── README.md
 ├── sample.pdf
-├── output/             # 추출 결과 저장 폴더
-├── prompts/
-│   ├── extract_basic.json
-│   ├── extract_logistics.json
-└── app/
-    ├── main.py         # 테스트용 실행 코드 
-    ├── server.py       # fastAPI 실행 코드
-    ├── pipeline.py
-    ├── preprocessor.py
-    ├── extractor.py
-    ├── output_handler.py
-    ├── prompt_loader.py
-    └── interfaces/
-        ├── preprocessor.py
-        ├── extractor.py
-        └── output_handler.py
+├── output/                       # JSON extraction results
+├── prompts/                      # Prompt templates (Python-based)
+│   ├── __init__.py
+│   ├── extract_basic.py
+│   ├── extract_full_bl.py
+│   └── extract_full_bl_batch.py
+├── app/
+│   ├── server.py                 # FastAPI entry point
+│   ├── components/
+│   │   ├── extractor/
+│   │   │   ├── __init__.py
+│   │   │   ├── base_extractor.py
+│   │   │   └── gpt_extractor.py
+│   │   ├── output_handler/
+│   │   │   ├── __init__.py
+│   │   │   ├── base_output_handler.py
+│   │   │   └── json_handler.py
+│   │   ├── preprocessor/
+│   │   │   ├── __init__.py
+│   │   │   ├── base_preprocessor.py
+│   │   │   └── pdf_preprocessor.py
+│   │   └── pipelines.py         # (if needed)
+│   ├── services/
+│   │   └── extract_service.py
+│   ├── schemas/
+│   │   └── file_data.py
+│   ├── utils/
+│   │   └── logger.py
 ```
-## 🧩 주요 기능 (Features)
 
-- 📄 PDF 또는 이미지 문서의 텍스트 자동 추출 (OCR)
-- 💬 템플릿 기반 GPT 문서 정보 추출
-- 📤 JSON 포맷 결과 반환 및 저장
-- 🛠️ FastAPI REST API + Swagger 문서
-- 🐳 Docker 환경 
+## 🔄 Processing Flow
+1. Upload a PDF or image document
+2. Text extraction via PyMuPDF (with OCR fallback using Tesseract)
+3. Prompt selection and injection
+4. Inference with GPT via LangChain (GPTExtractor)
+5. Parse and save results as structured JSON (JSONHandler)
+6. Access via REST API (/extract, /extract/bulk, /prompts)
 
-## ⚙️ 실행 흐름 (Processing Pipeline)
-
-1. PDF 또는 이미지 업로드
-2. 텍스트 추출 (`PDFPreprocessor`)
-3. 템플릿 로드 (`prompt_loader`)
-4. GPT 추론 (`GPTExtractor`)
-5. 결과 저장 (`JSONSaver`)
-6. FastAPI를 통해 API 호출 가능 (`/extract`, `/prompts`)
-
-## 🚀 실행 방법
-### 1️⃣ Docker로 실행
+## 🚀 Getting Started
+### 🐳 Run with Docker (recommended)
 ```bash
 docker-compose down && docker-compose up --build
-FastAPI Swagger 문서: http://localhost:8000/docs
+Access the FastAPI docs at: http://localhost:8000/docs
 ```
-
-### 2️⃣ 로컬 개발환경 실행 (venv 권장)
+### 🧪 Run locally with Python (for development)
 ```bash
 python -m venv venv
-source venv/bin/activate  # Windows: venv\\Scripts\\activate
+source venv/bin/activate         # Windows: venv\Scripts\activate
 pip install -r requirements.txt
 
-# 테스트용 실행
-PYTHONPATH=. python -m uvicorn app.server:app --reload
+# Start FastAPI development server
+PYTHONPATH=. uvicorn app.server:app --reload
 ```
 
+## 📬 API Endpoints
 
+| Method | Endpoint | Description |
+| --- | --- | --- |
+| POST | /extract | Extract data from a single file |
+| POST | /extract/bulk | Batch extract multiple files |
+| GET | /prompts | List available prompt templates |
+
+All endpoints return structured JSON responses.
+
+---
+
+## 📝 Output Format
+Example:
+
+```json
+{
+  "filename": "invoice123.pdf",
+  "result": {
+    "invoice_number": "INV-2023-001",
+    "exporter": "ACME Corp",
+    "amount": "13,400.00"
+  }
+}
+```
+
+## 📌 Future Plans
+- Image preprocessing support (IMGPreprocessor)
+- Database integration for result storage
+- Retry/validation pipeline for low-confidence results

@@ -55,7 +55,7 @@ class ExtractService:
             for text, filedata in zip(texts, filedata_list)
         ]
 
-        raw_results = await extractor.extract_batch_parallel(inputs)
+        raw_results = await extractor.extract_batch_parallel(inputs) 
 
         return [
             {

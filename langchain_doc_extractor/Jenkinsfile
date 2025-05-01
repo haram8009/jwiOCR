@@ -1,9 +1,22 @@
 pipeline {
     agent any
+
+    environment {
+        OPENAI_API_KEY = credentials('OPENAI_API_KEY')
+    }
+
     stages {
         stage('Checkout') {
             steps {
                 checkout scm
+            }
+        }
+
+        stage('Prepare .env') {
+            steps {
+                writeFile file: 'langchain_doc_extractor/.env', text: """
+                OPENAI_API_KEY=${OPENAI_API_KEY}
+                """
             }
         }
 

@@ -10,6 +10,12 @@ class ExtractService:
     def __init__(self):
         self.preprocessor = PDFPreprocessor()
         self.output_handler = JSONHandler()
+        self.extractor = {}
+
+    def get_extractor(self, prompt_name: str):
+        if prompt_name not in self.extractor:
+            self.extractor[prompt_name] = GPTExtractor(prompt_name=prompt_name)
+        return self.extractor[prompt_name]
 
     async def extract_document(self, filedata: FileData, prompt_name: str, use_internal_ocr: bool) -> dict:
         if filedata.content_type == "application/pdf":
@@ -23,16 +29,16 @@ class ExtractService:
         if use_internal_ocr:
             # internal ocr 
             text = self.preprocessor.preprocess_text(filedata)
-            extractor = GPTExtractor(prompt_name=prompt_name)
+            extractor = self.get_extractor(prompt_name)
             result = await extractor.extract(({"text": text, "filename": filedata.filename}))
         else:
             # gpt-4o ocr
             images = await self.preprocessor.preprocess_base64(filedata)
-            extractor = GPTExtractor(prompt_name=prompt_name)
+            extractor = self.get_extractor(prompt_name)
             result = await extractor.extract_img({"image": images, "filename": filedata.filename})
         return self.output_handler.parse(result['result'])
 
-    def extract_document_img(self, filedata: FileData, prompt_name: str) -> dict:
+    async def extract_document_img(self, filedata: FileData, prompt_name: str) -> dict:
         raise NotImplementedError("Image support not implemented yet")
 
     async def extract_document_bulk(self, filedata_list: list[FileData], prompt_name: str, use_internal_ocr: bool) -> list[dict]:
@@ -50,7 +56,7 @@ class ExtractService:
 
 
     async def extract_document_pdf_bulk(self, filedata_list: list[FileData], prompt_name: str, use_internal_ocr: bool) -> list[dict]:
-        extractor = GPTExtractor(prompt_name=prompt_name)
+        extractor = self.get_extractor(prompt_name)
 
         if use_internal_ocr:
             # asynchronous processing

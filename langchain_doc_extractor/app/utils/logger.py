@@ -2,9 +2,26 @@ import logging
 import time
 import inspect
 from functools import wraps
+import sys
 
 logger = logging.getLogger("main")
-logging.basicConfig(level=logging.INFO)
+logger.setLevel(logging.DEBUG)  
+
+# Formatter 
+formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+
+# console handler: above INFO level
+console_handler = logging.StreamHandler(sys.stdout)
+console_handler.setLevel(logging.INFO)
+console_handler.setFormatter(formatter)
+
+# file handler: above DEBUG level
+file_handler = logging.FileHandler("debug.log")
+file_handler.setLevel(logging.DEBUG)
+file_handler.setFormatter(formatter)
+
+logger.addHandler(console_handler)
+logger.addHandler(file_handler)
 
 def log_call(fn=None):
     def decorator(func):
@@ -16,7 +33,7 @@ def log_call(fn=None):
                 start = time.perf_counter()
                 result = await func(*args, **kwargs)
                 duration = time.perf_counter() - start
-                logger.info(f"[{cls_name}] {func.__name__}() called — took {duration:.2f}s")
+                logger.info(f"[{cls_name}] {func.__name__}() called - took {duration:.2f}s")
                 return result
             return async_wrapper
         else:
@@ -27,7 +44,7 @@ def log_call(fn=None):
                 start = time.perf_counter()
                 result = func(*args, **kwargs)
                 duration = time.perf_counter() - start
-                logger.info(f"[{cls_name}] {func.__name__}() called — took {duration:.2f}s")
+                logger.info(f"[{cls_name}] {func.__name__}() called - took {duration:.2f}s")
                 return result
             return sync_wrapper
 

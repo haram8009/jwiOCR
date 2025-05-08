@@ -7,7 +7,7 @@ extract_full_bl = ChatPromptTemplate.from_messages([
 Please extract and return a **JSON object** with the following fields (use exactly these keys):
 
 - HouseBL_No: House Bill of Lading Number
-- BL_NO: Master BL Number (optional, may be missing in HBL)
+- BL_NO: Master BL Number 
 - Containers: list of Containers:
     - Container_No: Container Number
     - Container_Type: Container Type (20GP, 40HQ, etc.)

@@ -9,7 +9,8 @@ service = ExtractService()
 @router.post("/extract")
 async def extract(
     file: UploadFile = File(...),
-    prompt_name: str = Form(...)
+    prompt_name: str = Form(...),
+    use_internal_ocr: bool = Form(False)
 ):
     try:
         file.filename = file.filename.replace(" ", "_")
@@ -21,7 +22,7 @@ async def extract(
         }
         filedata = FileData(**filedata)  # Validate the file data 
 
-        result = await service.extract_document(filedata, prompt_name)
+        result = await service.extract_document(filedata, prompt_name, use_internal_ocr)
         return JSONResponse(content=result)
     except Exception as e:
         return JSONResponse(
@@ -33,7 +34,8 @@ async def extract(
 @router.post("/extract/bulk")
 async def extract_bulk(
     files: list[UploadFile] = File(...),
-    prompt_name: str = Form(...)
+    prompt_name: str = Form(...),
+    use_internal_ocr: bool = Form(False)
 ):
     try:
         filedata_list = []
@@ -52,7 +54,7 @@ async def extract_bulk(
                 content={"message": "No files provided."}
             )
 
-        results = await service.extract_document_bulk(filedata_list, prompt_name)
+        results = await service.extract_document_bulk(filedata_list, prompt_name, use_internal_ocr)
         return results
 
     except Exception as e:

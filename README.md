@@ -73,7 +73,7 @@ jwiOCR/
 ### 🐳 Run with Docker (recommended)
 ```bash
 docker-compose down && docker-compose up --build
-Access the FastAPI docs at: http://localhost:8000/docs
+Access the FastAPI docs at: http://localhost:18000/docs
 ```
 ### 🧪 Run locally with Python (for development)
 ```bash
